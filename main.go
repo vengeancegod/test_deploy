@@ -57,5 +57,5 @@ func dockerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func conditionCheckHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "server work correctly!!!!")
+	fmt.Fprintf(w, "server work correctly!!!")
 }
