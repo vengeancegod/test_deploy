@@ -21,7 +21,7 @@ func TestDockerHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code")
 	}
 
-	expected := "hello from docker"
+	expected := "hello from docker123"
 
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body")

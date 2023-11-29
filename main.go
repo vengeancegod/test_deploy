@@ -53,7 +53,7 @@ func postPerson(w http.ResponseWriter, r *http.Request) {
 }
 
 func dockerHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello from docker")
+	fmt.Fprintf(w, "hello from docker123")
 }
 
 func conditionCheckHandler(w http.ResponseWriter, r *http.Request) {
