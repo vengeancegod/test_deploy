@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/go-redis/redis/v8"
 )
 
 type Person struct {
@@ -15,6 +18,7 @@ type Person struct {
 var people []Person
 
 func main() {
+
 	http.HandleFunc("/people", peopleHandler)
 	http.HandleFunc("/condition", conditionCheckHandler)
 	http.HandleFunc("/", dockerHandler)
@@ -52,8 +56,33 @@ func postPerson(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "add new people: '%v'", person)
 }
 
+var ctx = context.Background()
+
 func dockerHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "hello from docker123")
+	bd := redis.NewClient(&redis.Options{
+		Addr: "redis:6379",
+		//Password: "eqgadya6YZAKY9alFQmDJzAKnfaQYL750WayS3HFT9k",
+		DB: 0,
+	})
+	_, err := bd.Ping(ctx).Result()
+	if err != nil {
+		log.Fatalf("Ошибка подключения: %v", err)
+	}
+	if r.Method == http.MethodGet && r.URL.Path == "/" {
+		err := bd.Incr(ctx, "counter").Err()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		counter, err := bd.Get(ctx, "counter").Result()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		fmt.Fprintf(w, "Счетчик: %s", counter)
+		defer bd.Close()
+	}
 }
 
 func conditionCheckHandler(w http.ResponseWriter, r *http.Request) {
