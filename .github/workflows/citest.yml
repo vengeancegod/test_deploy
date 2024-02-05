@@ -39,5 +39,11 @@ jobs:
     - name: Run golint
       run: golint ./...
 
+    - name: Connect to redis
+      run: docker run --name redis -d redis
+      env: 
+        REDIS_HOST: redis
+        REDIS_PORT: 6379
     - name: Run tests
       run: go test -race -vet=off ./...
+       
