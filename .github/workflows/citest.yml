@@ -40,7 +40,7 @@ jobs:
       run: golint ./...
 
     - name: Connect to redis
-      run: go run main.go
+      run: docker run --name redis -d redis
       env: 
         REDIS_HOST: redis
         REDIS_PORT: 6379

@@ -61,7 +61,7 @@ var ctx = context.Background()
 
 func dockerHandler(w http.ResponseWriter, r *http.Request) {
 	bd := redis.NewClient(&redis.Options{
-		Addr: "redis:6379",
+		Addr: "amvera-darkyz-run-test-deploy2:6379",
 		//Password: "eqgadya6YZAKY9alFQmDJzAKnfaQYL750WayS3HFT9k",
 		DB: 0,
 	})
