@@ -26,6 +26,9 @@ jobs:
 
     - name: Run go vet
       run: go vet ./...
+    
+    - name: Start redis
+      run: docker run --name redis -d redis
 
     - name: Install staticcheck
       run: go install honnef.co/go/tools/cmd/staticcheck@latest
