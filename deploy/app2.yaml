@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-local-go-app-deploy
+  labels:
+    app: second-local-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-local-deploy
+  template:
+    metadata:
+      labels:
+        app: second-local-deploy
+    spec:
+      containers:
+      - name: app
+        image: local/goapp:v2 #local/goapp:v1
+        # localhost:32000/myapp:registry 
+        # args:
+        #  - --prefix=B
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "1024Mi"
+          requests:
+            cpu: "0.2"
+            memory: "512Mi"

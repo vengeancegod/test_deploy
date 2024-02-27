@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-redis-deploy
+  labels:
+    app: local-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-redis
+  template:
+    metadata:
+      labels:
+        app: local-redis
+    spec:
+      containers:
+        - name: redis
+          # image: localhost:32000/redis    
+          image: redis    
+          args:
+            - --protected-mode no 
+            - --dir /data
+            - --rdbcompression yes 
+            - --rdbchecksum yes 
+            - --maxmemory-policy noeviction 
+            - --maxmemory 128M 
+            - --appendonly yes 
+            - --appendfsync everysec 
+            - --auto-aof-rewrite-percentage 100 
+            - --auto-aof-rewrite-min-size 64mb 
+            - --save 900 1 
+            - --save 300 10 
+            - --save 60 100 
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - mountPath: /data
+              name: redis-storage
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "356Mi"
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: test-pvc

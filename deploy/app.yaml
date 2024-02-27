@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-go-app-deploy
+  labels:
+    app: local-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-deploy
+  template:
+    metadata:
+      labels:
+        app: local-deploy
+    spec:
+      containers:
+      - name: app
+        image: local/goapp:v1 
+        # localhost:32000/myapp:registry 
+        # args:
+        #  - --prefix=A
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "0.5"
+            memory: "1024Mi"
+          requests:
+            cpu: "0.2"
+            memory: "512Mi"
+
+#raznesti po raznim failam
+#minikube ingress+sekret
+#socketbraacker
+#middleware
+#rate-limiter
+#Добавить ингресс контроллер с двумя сервисами
