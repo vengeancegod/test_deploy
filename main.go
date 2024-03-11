@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -17,6 +18,12 @@ type Person struct {
 }
 
 var people []Person
+var prefix string
+
+func init() {
+	flag.StringVar(&prefix, "prefix", "", "")
+	flag.Parse()
+}
 
 func main() {
 
@@ -61,7 +68,7 @@ var ctx = context.Background()
 
 func dockerHandler(w http.ResponseWriter, r *http.Request) {
 	bd := redis.NewClient(&redis.Options{
-		Addr: "amvera-darkyz-run-test-deploy2:6379",
+		Addr: "redis-deploy-service:6379",
 		//Password: "eqgadya6YZAKY9alFQmDJzAKnfaQYL750WayS3HFT9k",
 		DB: 0,
 	})
@@ -81,7 +88,7 @@ func dockerHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		fmt.Fprintf(w, "Счетчик: %s", counter)
+		fmt.Fprintf(w, "Счетчик страницы с префиксом '%s':  %s", prefix, counter)
 		defer bd.Close()
 	}
 }
